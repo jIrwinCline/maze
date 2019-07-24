@@ -1,52 +1,97 @@
 require 'pry'
+require 'time'
 # require 'song'
 
 
 class Maze
-  @@currentRoom = 0
-  @@description = ["WatchTower", "Bedroom", "Library", "Theatre", "Den","Living Room", "Poker Room", "Resteroom", "Dojo", "Yoga Room", "Closet", "Exit"]
+  @@Mazes = []
+  @@currentMaze = 0
 
-  def initialize()
-    # @deadRoom = [, ,]
+  attr_accessor :current_room, :description
+
+  def initialize(current_room, rooms)
+    @current_room = current_room
+    @directions = ["up", "right", "down", "left"]
+    @rooms = rooms
+    @@Mazes.push(self)
+    @endTime = Time.now.strftime("%S").to_i + 5
   end
 
-  def self.change_room(direction)
+  def start_time
+    time = Time.now.strftime("%S")
+    @endTime = time.to_i + 5
+
+  end
+  def check_timeEnd
+    compareTime = Time.now.strftime("%S").to_i
+    return compareTime >= @endTime
+  end
+
+  def check_win(direction)
+    @current_room == @rooms.length-1 && (direction == "down" || direction == "right")
+  end
+
+  def check_wall(direction)
+    walls = @rooms[@rooms.keys[@current_room]]
+    wallToGoThrough = @directions.index(direction)
+    return walls[wallToGoThrough] == 1
+  end
+
+  def self.getMaze
+    @@Mazes[@@currentMaze]
+  end
+
+  def get_room_description
+    @rooms.keys[@current_room]
+  end
+
+
+  def change_room(direction)
+    if(check_wall(direction))
+      return nil
+    end
+
+    if(check_win(direction))
+      @current_room = 1
+      return "You made it outside. Nice."
+    end
+
     if direction == "left"
-      if @@currentRoom == 0  || @@currentRoom % 4 == 0
+      if @current_room == 0  || @current_room % 4 == 0
         return nil
       else
-        @@currentRoom -= 1
-        return @@description[@@currentRoom]
+        @current_room -= 1
+        return get_room_description
       end
     elsif direction == "right"
-      if @@currentRoom == 3 || @@currentRoom == 7 || @@currentRoom == 11
+      if @current_room == 3 || @current_room == 7 || @current_room == 11
         return nil
       else
-        @@currentRoom += 1
-        return @@description[@@currentRoom]
+        @current_room += 1
+        return get_room_description
       end
     elsif direction == "up"
-      if @@currentRoom >= 0 && @@currentRoom < 3
+      if @current_room >= 0 && @current_room < 3
         return nil
       else
-        @@currentRoom -= 4
-        return @@description[@@currentRoom]
+        @current_room -= 4
+        return get_room_description
       end
     elsif direction == "down"
-      if @@currentRoom > 7 && @@currentRoom <= 11
+      if @current_room > 7 && @current_room <= 11
         return nil
       else
-        @@currentRoom += 4
-        return @@description[@@currentRoom]
+        @current_room += 4
+        return get_room_description
       end
     end
   end
 
 
-  def self.currentRoom
-    @@description[@@currentRoom]
-  end
-
+  # def self.currentRoom
+  #   @rooms[@current_room]
+  # end
+  #
 
 
 end
