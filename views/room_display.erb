@@ -1,0 +1,32 @@
+
+<div class="room-border">
+<div class="room-info">
+
+<% if !@room %>
+<p><%= @currentRoom %></p><br>
+<p> Can't Move that Direction!</p>
+<% else %>
+<p><%= @room %></p><br>
+<%end %>
+</div>
+  <form action="/change_room" method="post">
+    <input type="hidden" name="direction" value="left">
+    <button id="left" type="submit">Left</button>
+  </form>
+
+  <form action="/change_room" method="post">
+    <input type="hidden" name="direction" value="right">
+    <button id="right" type="submit">Right</button>
+  </form>
+
+  <form action="/change_room" method="post">
+    <input type="hidden" name="direction" value="up">
+    <button id="up" type="submit">Up</button>
+  </form>
+
+  <form action="/change_room" method="post">
+    <input type="hidden" name="direction" value="down">
+    <button id="down" type="submit">Down</button>
+  </form>
+
+</div>
